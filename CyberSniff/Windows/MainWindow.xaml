@@ -148,6 +148,11 @@
                                     </ControlTemplate>
                                 </Button.Template>
                             </Button>
+                            <!-- MaxIcon: hidden PackIcon referenced by code-behind for maximize/restore state -->
+                            <materialDesign:PackIcon x:Name="MaxIcon"
+                                                     Kind="WindowMaximize"
+                                                     Width="0" Height="0"
+                                                     Visibility="Collapsed"/>
                         </StackPanel>
 
                         <!-- Logo y nombre -->
@@ -956,6 +961,23 @@
                                    Text="CyberSniff v3.2  ·  .NET 6  ·  WPF  ·  SharpPcap"/>
                     </Grid>
                 </Border>
+
+                <!-- Compatibilidad con code-behind heredado: MaxBottom, Dimmer, Canvas (ocultos) -->
+                <Button x:Name="MaxBottom"
+                        Visibility="Collapsed"
+                        Width="0" Height="0"
+                        Grid.Row="4"/>
+                <Border x:Name="Dimmer"
+                        Grid.Row="3"
+                        Background="#88000000"
+                        Visibility="Hidden"
+                        IsHitTestVisible="False"
+                        Panel.ZIndex="50"/>
+                <Canvas x:Name="Canvas"
+                        Grid.Row="3"
+                        Visibility="Hidden"
+                        IsHitTestVisible="False"
+                        Panel.ZIndex="49"/>
 
                 <!-- Notificación flotante -->
                 <Grid x:Name="NotificationGrid"

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -33,6 +33,34 @@ using Settings = CyberSniff.Views.Settings;
 using Theme = CyberSniff.Models.Theme;
 
 namespace CyberSniff.Windows;
+
+/// <summary>Animates GridLength (column/row Width/Height) — needed for sidebar toggle.</summary>
+public class GridLengthAnimation : AnimationTimeline
+{
+    public static readonly DependencyProperty FromProperty =
+        DependencyProperty.Register(nameof(From), typeof(GridLength), typeof(GridLengthAnimation));
+    public static readonly DependencyProperty ToProperty =
+        DependencyProperty.Register(nameof(To), typeof(GridLength), typeof(GridLengthAnimation));
+    public static readonly DependencyProperty EasingFunctionProperty =
+        DependencyProperty.Register(nameof(EasingFunction), typeof(IEasingFunction), typeof(GridLengthAnimation));
+
+    public GridLength     From           { get => (GridLength)GetValue(FromProperty);         set => SetValue(FromProperty, value); }
+    public GridLength     To             { get => (GridLength)GetValue(ToProperty);           set => SetValue(ToProperty,   value); }
+    public IEasingFunction EasingFunction { get => (IEasingFunction)GetValue(EasingFunctionProperty); set => SetValue(EasingFunctionProperty, value); }
+
+    public override Type TargetPropertyType => typeof(GridLength);
+
+    protected override Freezable CreateInstanceCore() => new GridLengthAnimation();
+
+    public override object GetCurrentValue(object defaultFrom, object defaultTo, AnimationClock clock)
+    {
+        double from = ((GridLength)GetValue(FromProperty)).Value;
+        double to   = ((GridLength)GetValue(ToProperty)).Value;
+        double t    = clock.CurrentProgress ?? 0;
+        if (EasingFunction != null) t = EasingFunction.Ease(t);
+        return new GridLength(from + (to - from) * t);
+    }
+}
 
 [Obfuscation(Feature = "apply to member * when constructor: virtualization", Exclude = false)]
 public partial class MainWindow : Window
@@ -1691,19 +1719,19 @@ public partial class MainWindow : Window
             {
                 case NotificationType.Info:
                     NotificationIcon.Kind = PackIconKind.InfoCircleOutline;
-                    NotificationTitle.Content = "Notice";
+                    NotificationTitle.Text = "Notice";
                     NotificationDescription.Text = message;
                     break;
 
                 case NotificationType.Alert:
                     NotificationIcon.Kind = PackIconKind.WarningOutline;
-                    NotificationTitle.Content = "Alert";
+                    NotificationTitle.Text = "Alert";
                     NotificationDescription.Text = message;
                     break;
 
                 case NotificationType.Error:
                     NotificationIcon.Kind = PackIconKind.ErrorOutline;
-                    NotificationTitle.Content = "Error";
+                    NotificationTitle.Text = "Error";
                     NotificationDescription.Text = message;
                     break;
                 default:
@@ -2092,5 +2120,54 @@ public partial class MainWindow : Window
     private void Window_Deactivated(object sender, EventArgs e)
     {
         Border.BorderBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
+    }
+
+    // ── Sidebar helpers (new UI) ────────────────────────────────────────
+    private bool _sidebarExpanded = true;
+    private const double SidebarExpandedWidth  = 200;
+    private const double SidebarCollapsedWidth = 50;
+
+    private void BtnToggleSidebar_Click(object sender, MouseButtonEventArgs e)
+    {
+        _sidebarExpanded = !_sidebarExpanded;
+        double targetWidth = _sidebarExpanded ? SidebarExpandedWidth : SidebarCollapsedWidth;
+        var animation = new GridLengthAnimation
+        {
+            From           = SidebarColumn.Width,
+            To             = new GridLength(targetWidth),
+            Duration       = new Duration(TimeSpan.FromMilliseconds(280)),
+            EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+        };
+        SidebarColumn.BeginAnimation(ColumnDefinition.WidthProperty, animation);
+        TxtToggleIcon.Text  = _sidebarExpanded ? "◁◁" : "▷▷";
+        TxtToggleLabel.Text = _sidebarExpanded ? "Colapsar" : "Expandir";
+    }
+
+    private void NavList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        // Navigation handled by the sidebar items
+    }
+
+    private void NavSettings_Click(object sender, MouseButtonEventArgs e)
+    {
+        OpenSettingsEvent(sender, null);
+    }
+
+    private void DataGridRow_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not DataGridRow row) return;
+        if (row.GetIndex() > 3) return;
+        var sb = new Storyboard();
+        var fadeIn = new DoubleAnimation
+        {
+            From           = 0,
+            To             = 1,
+            Duration       = new Duration(TimeSpan.FromMilliseconds(300)),
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+        Storyboard.SetTarget(fadeIn, row);
+        Storyboard.SetTargetProperty(fadeIn, new PropertyPath("Opacity"));
+        sb.Children.Add(fadeIn);
+        sb.Begin();
     }
 }
