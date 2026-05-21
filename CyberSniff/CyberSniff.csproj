@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -13,22 +13,10 @@
     <ApplicationIcon>csniff-box-ico.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <GenerateProgramFile>false</GenerateProgramFile>
-    <PackageVersion>3.2.7.5</PackageVersion>
-    <Company>CyberSniffDeveloper</Company>
-    <LangVersion>latestmajor</LangVersion>
-    <Title>CyberSniff</Title>
-    <PackageProjectUrl>https://github.com/CyberSniffDeveloper/desktop-client</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/CyberSniffDeveloper/desktop-client/LICENSE.md</PackageLicenseUrl>
-    <AssemblyVersion>3.2.7.5</AssemblyVersion>
-    <FileVersion>3.2.7.5</FileVersion>
-    <RepositoryUrl>https://github.com/CyberSniffDeveloper/desktop-client</RepositoryUrl>
-    <PackageTags>network, network analyser</PackageTags>
-    <SignAssembly>true</SignAssembly>
-    <PublicSign>true</PublicSign>
+    <!-- Firma deshabilitada temporalmente para desarrollo local (key.snk no incluido en repo) -->
+    <!--<AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>-->
+    <SignAssembly>false</SignAssembly>
+    <PublicSign>false</PublicSign>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>false</Optimize>

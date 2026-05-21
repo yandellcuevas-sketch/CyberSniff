@@ -1,4 +1,4 @@
-﻿<Window
+<Window
     x:Class="CyberSniff.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -18,7 +18,7 @@
     MaxWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
     MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
     AllowsTransparency="True"
-    Background="#FF14141E"
+    Background="{DynamicResource BgPrimaryBrush}"
     Closing="Window_Closing"
     FontFamily="pack://application:,,,/CyberSniff;Component/Resources/Fonts/#Gotham"
     Foreground="White"
@@ -485,7 +485,7 @@
                     Height="37"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Background="#7F0A0A14"
+                    Background="{DynamicResource BgSurfaceBrush}"
                     RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <TransformGroup>
@@ -572,7 +572,8 @@
                     <StackPanel
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        WindowChrome.IsHitTestVisibleInChrome="False">
                         <Image
                             Width="20"
                             Height="20"
@@ -593,12 +594,23 @@
                                 </TransformGroup>
                             </Image.RenderTransform>
                         </Image>
+                        <!-- Punto de acento cyan luminoso -->
+                        <Ellipse Width="7" Height="7" Margin="0,0,8,0"
+                                 Fill="{DynamicResource AccentCyanBrush}">
+                            <Ellipse.Effect>
+                                <DropShadowEffect BlurRadius="6" ShadowDepth="0"
+                                                  Color="{DynamicResource AccentCyanColor}"
+                                                  Opacity="0.9"/>
+                            </Ellipse.Effect>
+                        </Ellipse>
                         <TextBlock
                             x:Name="WindowTitleText"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             RenderTransformOrigin="0.5,0.5"
-                            Style="{StaticResource CyberSniffBoldText}"
+                            Foreground="{DynamicResource AccentCyanBrush}"
+                            FontFamily="{DynamicResource MonoFont}"
+                            FontSize="12" FontWeight="Bold"
                             Text="CyberSniff - Idle">
                             <TextBlock.RenderTransform>
                                 <TransformGroup>
@@ -632,14 +644,16 @@
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
                     AutoGenerateColumns="False"
-                    Background="#4414141E"
+                    Style="{DynamicResource PacketGrid}"
+                    ColumnHeaderStyle="{DynamicResource PacketGridColumnHeader}"
+                    RowStyle="{DynamicResource PacketGridRow}"
+                    CellStyle="{DynamicResource PacketGridCell}"
                     BeginningEdit="Grid_BeginningEdit"
                     CanUserAddRows="False"
                     CanUserDeleteRows="False"
                     CanUserReorderColumns="False"
                     CanUserResizeColumns="False"
                     CanUserResizeRows="False"
-                    HorizontalGridLinesBrush="#7F757575"
                     IsSynchronizedWithCurrentItem="False"
                     MouseDoubleClick="DataGridView_MouseDoubleClick"
                     RenderTransformOrigin="0.5,0.5"
@@ -843,7 +857,7 @@
                     MaxHeight="106"
                     Margin="0,460,0,0"
                     VerticalAlignment="Bottom"
-                    Background="#7F0A0A14"
+                    Background="{DynamicResource BgSurface2Brush}"
                     RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <TransformGroup>
@@ -934,71 +948,77 @@
                             Margin="180,0,10,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            materialDesign:ButtonAssist.CornerRadius="15"
+                            Padding="14,10"
+                            materialDesign:ButtonAssist.CornerRadius="8"
                             Command="{x:Static window:MainWindow.ToggleCapture}"
-                            Cursor="Arrow"
+                            Cursor="Hand"
                             IsEnabled="{Binding IsSniffing, Converter={StaticResource InverseBooleanConverter}, ElementName=Window}"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{DynamicResource BtnSuccess}"
                             ToolTip="Start / stop capturing traffic">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
                                     x:Name="SniffIcon"
                                     Margin="0,0,8,0"
                                     Kind="Search" />
-                                <TextBlock x:Name="SniffText" Text="SNIFF" />
+                                <TextBlock x:Name="SniffText" Text="SNIFF"
+                                           FontFamily="{DynamicResource UiFont}"
+                                           FontWeight="SemiBold" FontSize="11"/>
                             </StackPanel>
                         </Button>
                         <Button
                             x:Name="FilterButton"
-                            Width="50"
-                            Height="50"
-                            Margin="0,0,10,0"
+                            Width="42"
+                            Height="42"
+                            Margin="0,0,8,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            materialDesign:ButtonAssist.CornerRadius="20"
+                            materialDesign:ButtonAssist.CornerRadius="8"
                             Command="{x:Static window:MainWindow.OpenFilters}"
-                            Cursor="Arrow"
+                            Cursor="Hand"
                             IsEnabled="{Binding IsSniffing, Converter={StaticResource InverseBooleanConverter}, ElementName=Window}"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{DynamicResource BtnGhost}"
                             ToolTip="Customize packet filtering"
                             Visibility="Visible">
-                            <materialDesign:PackIcon Kind="FilterOutline" />
+                            <materialDesign:PackIcon Kind="FilterOutline"
+                                Foreground="{DynamicResource AccentCyanBrush}"/>
                         </Button>
                         <Button
                             x:Name="ArpButton"
-                            Width="50"
-                            Height="50"
-                            Margin="0,0,10,0"
+                            Width="42"
+                            Height="42"
+                            Margin="0,0,8,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            materialDesign:ButtonAssist.CornerRadius="20"
+                            materialDesign:ButtonAssist.CornerRadius="8"
                             Command="{x:Static window:MainWindow.OpenArp}"
-                            Cursor="Arrow"
+                            Cursor="Hand"
                             IsEnabled="{Binding IsSniffing, Converter={StaticResource InverseBooleanConverter}, ElementName=Window}"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{DynamicResource BtnGhost}"
                             ToolTip="Open the ARP poisoning window, which controls ARP poisoning on your network (admin not required!)">
                             <materialDesign:PackIcon
                                 Width="18"
                                 Height="18"
-                                Kind="SkullCrossbonesOutline" />
+                                Kind="SkullCrossbonesOutline"
+                                Foreground="{DynamicResource AccentRedBrush}"/>
                         </Button>
                         <Button
                             x:Name="SettingsButton"
-                            Width="50"
-                            Height="50"
+                            Width="42"
+                            Height="42"
                             Margin="0,0,10,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            materialDesign:ButtonAssist.CornerRadius="20"
+                            materialDesign:ButtonAssist.CornerRadius="8"
                             Command="{x:Static window:MainWindow.OpenSettings}"
-                            Cursor="Arrow"
+                            Cursor="Hand"
                             IsEnabled="{Binding IsSniffing, Converter={StaticResource InverseBooleanConverter}, ElementName=Window}"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{DynamicResource BtnGhost}"
                             ToolTip="Configure CyberSniff to your liking">
                             <materialDesign:PackIcon
                                 Width="18"
                                 Height="18"
-                                Kind="SettingsOutline" />
+                                Kind="SettingsOutline"
+                                Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </Button>
                     </StackPanel>
                 </Grid>
@@ -1011,7 +1031,7 @@
                     MaxHeight="29"
                     Margin="500,430,500,105"
                     VerticalAlignment="Bottom"
-                    Background="#7F0A0A14"
+                    Background="{DynamicResource BgSurface2Brush}"
                     RenderTransformOrigin="0.5,0.5">
                     <Canvas.RenderTransform>
                         <TransformGroup>
@@ -1065,7 +1085,7 @@
                     Margin="655,10,10,471"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Background="#7F0A0A14"
+                    Background="{DynamicResource BgSurface3Brush}"
                     Opacity="100"
                     RenderTransformOrigin="0.5,0.5"
                     Visibility="Hidden">
@@ -1103,11 +1123,11 @@
                         x:Name="NotificationTitle"
                         Margin="77,11,50,54"
                         Content="Notice"
-                        Foreground="White" />
+                        Foreground="{DynamicResource TextPrimaryBrush}" />
                     <TextBlock
                         x:Name="NotificationDescription"
                         Margin="81,33,50,9"
-                        Foreground="#3FFFFFFF"
+                        Foreground="{DynamicResource TextSecondaryBrush}"
                         Text="Description"
                         TextWrapping="WrapWithOverflow" />
                     <materialDesign:PackIcon
@@ -1124,7 +1144,7 @@
                     Grid.Column="1"
                     MaxWidth="800"
                     Margin="20,0,-315,0"
-                    Background="#FF14141E"
+                    Background="{DynamicResource BgSurfaceBrush}"
                     RenderTransformOrigin="0.5,0.5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="64" />
@@ -1142,7 +1162,7 @@
                         Grid.Row="0"
                         Width="296"
                         Height="64"
-                        Fill="#FF07070F"
+                        Fill="{DynamicResource BgSurface2Brush}"
                         WindowChrome.IsHitTestVisibleInChrome="True">
                         <Rectangle.Effect>
                             <DropShadowEffect

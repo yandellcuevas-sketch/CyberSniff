@@ -1,4 +1,4 @@
-﻿<Application
+<Application
     x:Class="CyberSniff.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,8 +10,8 @@
                 <ResourceDictionary Source="Resources/Style.xaml" />
                 <materialDesign:BundledTheme
                     BaseTheme="Dark"
-                    PrimaryColor="DeepOrange"
-                    SecondaryColor="Orange" />
+                    PrimaryColor="DeepPurple"
+                    SecondaryColor="Cyan" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
